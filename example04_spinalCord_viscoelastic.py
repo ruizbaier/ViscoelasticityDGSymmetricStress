@@ -65,7 +65,7 @@ Tmin = 0.3; t = 0; Tfinal = 1.; dt = 0.01; freqSave = 10; inc = 0;
 ### material parameters
 ndim = 2
 I      = Identity(ndim)
-rho    = Constant(1.)
+rho    = Constant(1000.)
 alpha  = Constant(15.)
 
 ### discontinuous material parameters
