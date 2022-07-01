@@ -3,7 +3,9 @@
 ## What
 Finite element simulation of viscoelasticity with a stress-based DG formulation. 
 
-![]( ) 
+![](https://github.com/ruizbaier/ViscoelasticityDGSymmetricStress/blob/main/spinal_sketch.png)
+![](https://github.com/ruizbaier/ViscoelasticityDGSymmetricStress/blob/main/spinal_gam.png)
+![](https://github.com/ruizbaier/ViscoelasticityDGSymmetricStress/blob/main/sp_all_norms.png) 
 
 
 
