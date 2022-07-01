@@ -5,7 +5,7 @@ import numpy as np
 parameters["form_compiler"]["cpp_optimize"] = True
 parameters["form_compiler"]["representation"] = "uflacs"
 
-fileP = XDMFFile("outputs/SpinalCord_newOMEGA.xdmf")
+fileP = XDMFFile("outputs/SpinalCord_newRHOs.xdmf")
 fileP.parameters['rewrite_function_mesh']=False
 fileP.parameters["functions_share_mesh"] = True
 fileP.parameters["flush_output"] = True
@@ -65,7 +65,6 @@ Tmin = 0.3; t = 0; Tfinal = 1.; dt = 0.01; freqSave = 10; inc = 0;
 ### material parameters
 ndim = 2
 I      = Identity(ndim)
-rho    = Constant(1000.)
 alpha  = Constant(15.)
 
 ### discontinuous material parameters
@@ -73,11 +72,14 @@ Kh = FunctionSpace(mesh, 'DG', 0)
 EC = Function(Kh); nuC = Function(Kh)
 ED = Function(Kh); nuD = Function(Kh)
 omega = Function(Kh)
+rho = Function(Kh)
 
 #           PIA     WHITE   GREY
 EC_values = [2300., 840.,  1600.] 
 nuC_values = [0.3, 0.479,  0.49]
 omega_values = [1/1000., 1/6.7, 1/6.7]
+
+rho_values = [1.133, 1.041, 1.045]
 
 ED_values = [2350., 2030.,   2030.]
 nuD_values = [0.33, 0.49,    0.49]
@@ -89,6 +91,7 @@ for cell_no in range(len(subdomains.array())):
     ED.vector()[cell_no] = ED_values[subdomain_no]
     nuD.vector()[cell_no] = nuD_values[subdomain_no]
     omega.vector()[cell_no] = omega_values[subdomain_no]
+    rho.vector()[cell_no] = rho_values[subdomain_no]
 
 #EC.rename("EC","EC"); fileP.write(EC, 0)
 
@@ -140,8 +143,8 @@ AA  = 1/dt**2*inner(calA(gamma),eta)*dx \
     + 1/dt**2*inner(calV(zeta),tau)*dx \
     + 0.5/omega/dt*inner(calV(zeta),tau)*dx \
     + 1/rho*dot(div(gamma+zeta),div(eta+tau))*dx \
-    - 1/rho*dot(avg(div(gamma+zeta)),jump(eta+tau,n))*dS \
-    - 1/rho*dot(avg(div(eta+tau)),jump(gamma+zeta,n))*dS \
+    - 1/avg(rho)*dot(avg(div(gamma+zeta)),jump(eta+tau,n))*dS \
+    - 1/avg(rho)*dot(avg(div(eta+tau)),jump(gamma+zeta,n))*dS \
     + alpha*k**2/avg(he)*dot(jump(gamma+zeta,n),jump(eta+tau,n))*dS
     
 # extra terms on stress boundaries 
